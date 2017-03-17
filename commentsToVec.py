@@ -60,3 +60,5 @@ if not os.path.exists("trained"):
 model.save(os.path.join("trained", "comments2vec.d2v"))
 #load model
 model = Doc2Vec.load(os.path.join("trained", "comments2vec.d2v"))
+#Getting a vector
+model.docvecs["COMMENT_0"]
