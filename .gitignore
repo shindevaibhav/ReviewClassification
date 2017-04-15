@@ -1,0 +1,9 @@
+*.pyc
+*vocab
+*.cPickle
+train/*
+*.sh
+*.out
+*.bin
+*.npy
+.idea/*
