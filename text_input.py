@@ -37,7 +37,7 @@ class TextReader(object):
             f = os.path.join(self.data_dir, f)
             if os.path.isfile(f):
                 chunks = f.split('.')
-                if chunks[-1] in self.suffix_list:
+                if chunks[0] in self.suffix_list:
                     data_files.append(f)
         assert data_files
         self.data_files = data_files
@@ -212,7 +212,7 @@ def prepare_pretrained_embedding(fname, word2id):
     return embedding
 
 def main():
-    reader = TextReader('./data/mr/', suffix_list=['csv'])
+    reader = TextReader('./data/mr/', suffix_list=['summary'])
 #    reader = TextReader('./data/mr/', suffix_list=['neg', 'pos'])
     reader.prepare_data(vocab_size=4000, test_fraction=0.1)
 #    reader.prepare_data(vocab_size=15000, test_fraction=0.1)    
