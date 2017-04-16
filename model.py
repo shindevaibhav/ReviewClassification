@@ -5,7 +5,7 @@ tf.app.flags.DEFINE_integer('emb_size', 300, 'Size of word embeddings')
 tf.app.flags.DEFINE_integer('num_kernel', 100, 'Number of filters for each window size')
 tf.app.flags.DEFINE_integer('min_window', 3, 'Minimum size of filter window')
 tf.app.flags.DEFINE_integer('max_window', 5, 'Maximum size of filter window')
-tf.app.flags.DEFINE_integer('vocab_size', 2500, 'Vocabulary size')
+tf.app.flags.DEFINE_integer('vocab_size', 4000, 'Vocabulary size')
 tf.app.flags.DEFINE_integer('num_class', 2, 'Number of class to consider')
 tf.app.flags.DEFINE_integer('sent_len', 480, 'Input sentence length. This is after the padding is performed.')
 tf.app.flags.DEFINE_float('l2_reg', 0, 'l2 regularization weight')
@@ -18,7 +18,7 @@ def _variable_on_cpu(name, shape, initializer):
 def _variable_with_weight_decay(name, shape, initializer, wd):
     var = _variable_on_cpu(name, shape, initializer)
     if wd is not None and wd != 0.:
-        weight_decay = tf.mul(tf.nn.l2_loss(var), wd, name='weight_loss')
+        weight_decay = tf.multiply(tf.nn.l2_loss(var), wd, name='weight_loss')
     else:
         weight_decay = tf.constant(0.0, dtype=tf.float32)
     return var, weight_decay
@@ -70,9 +70,9 @@ class Model(object):
                 conv_len = relu.get_shape()[1]
                 pool = tf.nn.max_pool(relu, ksize=[1,conv_len,1,1], strides=[1,1,1,1], padding='VALID')
                 # shape of pool: [batch_size, 1, 1, num_kernel]
-                pool = tf.squeeze(pool,squeeze_dims=[1,2]) # size: [batch_size, num_kernel]
+                pool = tf.squeeze(pool,axis=[1,2]) # size: [batch_size, num_kernel]
                 pool_tensors.append(pool)
-            pool_layer = tf.concat(concat_dim=1, values=pool_tensors, name='pool')
+            pool_layer = tf.concat(axis=1, values=pool_tensors, name='pool')
 
         # drop out layer
         if self.is_train and self.dropout > 0:
@@ -88,9 +88,10 @@ class Model(object):
             losses.append(wd)
             biases = _variable_on_cpu('biases', [self.num_class], tf.constant_initializer(0.01))
             logits = tf.nn.bias_add(tf.matmul(pool_dropout, W), biases)
+	    self.logits = logits
 
         # loss
-        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits, self._labels, name='cross_entropy_per_example')
+        cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=self._labels, name='cross_entropy_per_example')
         cross_entropy_loss = tf.reduce_mean(cross_entropy, name='cross_entropy_loss')
         losses.append(cross_entropy_loss)
         self._total_loss = tf.add_n(losses, name='total_loss')
@@ -117,7 +118,7 @@ class Model(object):
             self._train_op = opt.apply_gradients(grads)
 
             for var in tf.trainable_variables():
-                tf.histogram_summary(var.op.name, var)
+                tf.summary.histogram(var.op.name, var)
         else:
             self._train_op = tf.no_op()
             

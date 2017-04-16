@@ -26,6 +26,10 @@ tf.app.flags.DEFINE_integer('log_step', 10, 'Write log to stdout after this step
 tf.app.flags.DEFINE_integer('summary_step', 200, 'Write summary after this step')
 tf.app.flags.DEFINE_integer('save_epoch', 5, 'Save model after this epoch')
 
+m = None
+mtest = None
+sess = None
+
 def train():
     # load data
     train_loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, 'train.cPickle'), batch_size=FLAGS.batch_size)
@@ -34,17 +38,19 @@ def train():
 
     with tf.Graph().as_default():
         with tf.variable_scope('cnn', reuse=None):
+            global m
             m = model.Model(FLAGS, is_train=True)
         with tf.variable_scope('cnn', reuse=True):
-            mtest = model.Model(FLAGS, is_train=False)
+            global mtest
+	    mtest = model.Model(FLAGS, is_train=False)
 
-        saver = tf.train.Saver(tf.all_variables())
+        saver = tf.train.Saver(tf.global_variables())
         save_path = os.path.join(FLAGS.train_dir, 'model.ckpt')
-        summary_op = tf.merge_all_summaries()
-
+        summary_op = tf.summary.merge_all()
+	global sess
         sess = tf.Session(config=tf.ConfigProto(log_device_placement=FLAGS.log_device_placement))
-        summary_writer = tf.train.SummaryWriter(FLAGS.train_dir, graph_def=sess.graph_def)
-        sess.run(tf.initialize_all_variables())
+        summary_writer = tf.summary.FileWriter(FLAGS.train_dir, graph_def=sess.graph_def)
+        sess.run(tf.global_variables_initializer())
 
         if FLAGS.use_pretrain:
             print "Use pretrained embeddings to initialize model ..."

@@ -71,7 +71,8 @@ class TextReader(object):
         for f in data_files:
             strings = []
             df = pd.read_csv(f)
-            for i in range(len(df)):
+            print f
+	    for i in range(len(df)):
                 line = df.iloc[i]["Comments"]
                 clean_string = self.clean_str(line)
                 strings.append(clean_string)
@@ -213,7 +214,7 @@ def prepare_pretrained_embedding(fname, word2id):
 def main():
     reader = TextReader('./data/mr/', suffix_list=['csv'])
 #    reader = TextReader('./data/mr/', suffix_list=['neg', 'pos'])
-    reader.prepare_data(vocab_size=2500, test_fraction=0.1)
+    reader.prepare_data(vocab_size=4000, test_fraction=0.1)
 #    reader.prepare_data(vocab_size=15000, test_fraction=0.1)    
     embedding = prepare_pretrained_embedding('./data/word2vec/GoogleNews-vectors-negative300.bin', reader.word2id)
     # dump_to_file('./data/mr/emb.cPickle', embedding)
