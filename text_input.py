@@ -37,7 +37,7 @@ class TextReader(object):
             f = os.path.join(self.data_dir, f)
             if os.path.isfile(f):
                 chunks = f.split('_')
-                if chunks[0] in self.suffix_list:
+                if len(chunks) >= 2 and chunks[1] in self.suffix_list:
                     data_files.append(f)
         assert data_files
         self.data_files = data_files
