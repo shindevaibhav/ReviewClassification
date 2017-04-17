@@ -2,6 +2,8 @@ import text_input
 import re
 import pandas as pd
 import train
+import numpy as np
+import os
 
 reader = text_input.TextReader('./data/mr/', suffix_list=['summary'])
 reader.prepare_data(vocab_size=4000, test_fraction=0.1)
@@ -33,6 +35,20 @@ def get_prediction(string):
         return "positive"
     else:
         return "negative"
+
+def main():
+	df_summary_pos = pd.read_csv("csv/_summary_pos.csv")
+	string = df_summary_pos.iloc[35]["Comments"]
+	print string
+	print get_prediction(string)
+	df_summary_neg = pd.read_csv("csv/_summary_neg.csv")
+	string = df_summary_neg.iloc[3]["Comments"]
+        print string
+	print get_prediction(string)
+
+
+if __name__ == '__main__':
+    main()
 
 '''
 y_batch = list(data_loader._y[50:99]) + [0]
