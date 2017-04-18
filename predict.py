@@ -5,46 +5,53 @@ import train
 import numpy as np
 import os
 
-reader = text_input.TextReader('./data/mr/', suffix_list=['summary'])
-reader.prepare_data(vocab_size=4000, test_fraction=0.1)
-train.main()
-sess = train.sess
-model = train.m
-#string = "I think that you have some good ideas. I really liked the first idea that you came up with it sounds as if you have put some thought into it. As for your second idea, would it be possible to empower these communities with a simplified version of your plan. When I think of the struggles that these communities have to deal with, my first notion is not that they are in need of jobs."
-def get_prediction(string):
-    #string = "Overall I felt that the student made a good effort to explain their ideas.  1. An unspecified rough app or computer program.  2. A series of sensors in bikes and/ or cars that alert drivers/ cyclists to potential collisions.  3. An app that the city/ police can use to see where cyclist have had accidents or poor experiences so that changes can be made to prevent future accidents."
-    clean_string = reader.clean_str(string)
-    toks = clean_string.split()
-    toks_len = len(toks)
-    max_sent_len = reader.max_sent_len
-    if toks_len <= max_sent_len:
-        pad_left = (max_sent_len - toks_len) / 2
-        pad_right = int(np.ceil((max_sent_len - toks_len) / 2.0))
-    else:
-        pad_left = 0
-        pad_right = 0
-        toks = toks[:len(max_sent_len)]
-    toks_ids = [1 for i in range(pad_left)] + [reader.word2id[t] if t in reader.word2id else 0 for t in toks] + [1 for i in range(pad_right)]
-    x = []
-    x.append(toks_ids)
-    data_loader = text_input.DataLoader(os.path.join(train.FLAGS.data_dir, 'train.cPickle'), batch_size=train.FLAGS.batch_size)
-    x_batch = list(data_loader._x[50:99]) + x
-    x_batch = np.array(x_batch)
-    logits = sess.run([model.logits], feed_dict={model.inputs: x_batch})
-    if logits[0][49][0] > logits[0][49][1]:
-        return "positive"
-    else:
-        return "negative"
+
+
+class Prediction(object):
+    def __init__(self):
+        self.reader = text_input.TextReader('./data/mr/', suffix_list=['summary'])
+        self.reader.prepare_data(vocab_size=4000, test_fraction=0.1)
+        train.train()
+        self.sess = train.sess
+        self.model = train.m
+        self.data_loader = text_input.DataLoader(os.path.join(train.FLAGS.data_dir, 'train.cPickle'),
+                                            batch_size=train.FLAGS.batch_size)
+    #string = "I think that you have some good ideas. I really liked the first idea that you came up with it sounds as if you have put some thought into it. As for your second idea, would it be possible to empower these communities with a simplified version of your plan. When I think of the struggles that these communities have to deal with, my first notion is not that they are in need of jobs."
+    def get_prediction(self,string):
+        #string = "Overall I felt that the student made a good effort to explain their ideas.  1. An unspecified rough app or computer program.  2. A series of sensors in bikes and/ or cars that alert drivers/ cyclists to potential collisions.  3. An app that the city/ police can use to see where cyclist have had accidents or poor experiences so that changes can be made to prevent future accidents."
+        clean_string = self.reader.clean_str(string)
+        toks = clean_string.split()
+        toks_len = len(toks)
+        max_sent_len = self.reader.max_sent_len
+        if toks_len <= max_sent_len:
+            pad_left = (max_sent_len - toks_len) / 2
+            pad_right = int(np.ceil((max_sent_len - toks_len) / 2.0))
+        else:
+            pad_left = 0
+            pad_right = 0
+            toks = toks[:len(max_sent_len)]
+        toks_ids = [1 for i in range(pad_left)] + [self.reader.word2id[t] if t in self.reader.word2id else 0 for t in toks] + [1 for i in range(pad_right)]
+        x = []
+        x.append(toks_ids)
+
+        x_batch = list(self.data_loader._x[50:99]) + x
+        x_batch = np.array(x_batch)
+        logits = self.sess.run([self.model.logits], feed_dict={self.model.inputs: x_batch})
+        if logits[0][49][0] > logits[0][49][1]:
+            return "positive"
+        else:
+            return "negative"
 
 def main():
-	df_summary_pos = pd.read_csv("csv/_summary_pos.csv")
-	string = df_summary_pos.iloc[35]["Comments"]
-	print string
-	print get_prediction(string)
-	df_summary_neg = pd.read_csv("csv/_summary_neg.csv")
-	string = df_summary_neg.iloc[3]["Comments"]
-        print string
-	print get_prediction(string)
+    pred = Prediction()
+    df_summary_pos = pd.read_csv("csv/_summary_pos.csv")
+    string = df_summary_pos.iloc[35]["Comments"]
+    print string
+    print pred.get_prediction(string)
+    df_summary_neg = pd.read_csv("csv/_summary_neg.csv")
+    string = df_summary_neg.iloc[3]["Comments"]
+    print string
+    print pred.get_prediction(string)
 
 
 if __name__ == '__main__':
