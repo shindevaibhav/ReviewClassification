@@ -17,6 +17,7 @@ The data in `data/mr/` are movie review polarity data provided [here](http://www
 and unzip it to the directory. It will be a `.bin` file.
 
 ## Usage
+curl -H "Content-Type: application/json" -X POST -d '{"text": "hello everyone it is important"}' http://0.0.0.0:5001/api/getPrediction
 
 #### Preprocess the data
 
