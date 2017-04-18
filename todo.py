@@ -8,11 +8,6 @@ import predict
 app = Flask(__name__)
 #global pred_object
 #pred_object = None
-@app.before_first_request
-def load_global_data():
-    print "################load data"
-    global pred_object
-    pred_object = predict.Prediction()
 
 @app.route('/')
 def todo():
@@ -29,5 +24,7 @@ def add_star():
 
 if __name__ == '__main__':
     print "################In main"
+    global pred_object
+    pred_object = predict.Prediction()
     app.run(host='0.0.0.0', debug=True,port=5001)
 
