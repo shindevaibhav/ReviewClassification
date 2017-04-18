@@ -6,20 +6,28 @@ from bson.objectid import ObjectId
 import predict
 
 app = Flask(__name__)
+#global pred_object
+#pred_object = None
+@app.before_first_request
+def load_global_data():
+    print "################load data"
+    global pred_object
+    pred_object = predict.Prediction()
 
-pred_object = None
 @app.route('/')
 def todo():
+    print "################In root"
     return render_template('index.html')
 
 @app.route('/api/getPrediction', methods=['POST'])
 def add_star():
-  task = request.json['text']
-  print pred_object.get_prediction(task)
-  return jsonify({'result' : predict.get_prediction(task)})
+    print "################In Post"
+    task = request.json['text']
+    result =  pred_object.get_prediction(task)
+    print result
+    return jsonify({'result' : result})
 
 if __name__ == '__main__':
-    global pred_object
-    pred_object = predict.Prediction()
+    print "################In main"
     app.run(host='0.0.0.0', debug=True,port=5001)
 
