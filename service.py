@@ -59,7 +59,7 @@ def main():
     pred_neutrality = predict.Prediction(suffix='Neutrality')
     global pred_localization
     pred_localization = predict.Prediction(suffix='Localization')
-    app.run(host='0.0.0.0', debug=True, port=5001)
+    app.run(host='0.0.0.0', debug=True,use_reloader=False, port=5001)
 
 
 if __name__ == '__main__':
