@@ -30,10 +30,10 @@ m = None
 mtest = None
 sess = None
 
-def train():
+def train(suffix):
     # load data
-    train_loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, 'train.cPickle'), batch_size=FLAGS.batch_size)
-    test_loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, 'test.cPickle'), batch_size=FLAGS.batch_size)
+    train_loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, suffix + '_train.cPickle'), batch_size=FLAGS.batch_size)
+    test_loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, suffix + '_test.cPickle'), batch_size=FLAGS.batch_size)
     max_steps = train_loader.num_batch * FLAGS.num_epoch # this is just an estimated number
 
     with tf.Graph().as_default():
@@ -146,7 +146,7 @@ def main(argv=None):
     if tf.gfile.Exists(FLAGS.train_dir):
         tf.gfile.DeleteRecursively(FLAGS.train_dir)
     tf.gfile.MakeDirs(FLAGS.train_dir)
-    train()
+    train('Summary')
 
 if __name__ == '__main__':
     tf.app.run()
