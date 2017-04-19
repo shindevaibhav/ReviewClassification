@@ -8,6 +8,7 @@ scotchTodo.config(function($interpolateProvider) {
 
 function mainController($scope, $http) {
         $scope.formData = {};
+        
         // when landing on the page, get all todos and show them
        
         // when submitting the add form, send the text to the node API
@@ -15,15 +16,19 @@ function mainController($scope, $http) {
                 $http.post('/api/getPrediction', $scope.formData)
                         .success(function(data) {
                                 $scope.formData = {}; // clear the form so our user is ready to enter another
-                                $scope.todos = data.result;
-   				console.log(data.result);
+                                $scope.todos = data;
+                                $scope.table = { fields: data.result };
+   				console.log($scope.table);
                         })
 .error(function(data) {
                                 console.log('Error: ' + data);
                         });
         };
 
-        // delete a todo after checking it
+        // Update the data
+         $scope.updateTodo = function() {
+               console.log($scope.table);
+        };
       
 }
 

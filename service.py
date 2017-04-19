@@ -41,7 +41,7 @@ def add_star():
     print result_mitigation
 
 
-    return jsonify({'result' : result_summary})
+    return jsonify({'result' : {'summary' : result_summary,'praise' : result_praise,'problem' : result_problem,'solution' : result_solution,'localization' : result_localization,'neutrality' : result_neutrality,'mitigation' : result_mitigation}})
 
 def main():
     print "################In main"

@@ -20,7 +20,7 @@
 
     <!-- SPELLS -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.8/angular.min.js"></script><!-- load angular -->
     <script type="text/javascript" src="{{ url_for('static', filename = 'core.js') }}"></script>
 
    </head>
@@ -32,8 +32,32 @@
 			<h1>Predict comments</h1>
 		</div>
 
-                <div class="jumbotron text-center" >
-                        <h1>{[{ todos }]}</h1>
+                <div id="todo-form" ng-show="table.fields">
+                    <div class="table-responsive"">
+                      <table class="table">
+                       <thead>
+   			 <tr>
+      			 <th>Summary</th>
+     			 <th>Praise</th>
+     	 		 <th>Problem</th>
+ 			 <th>Solution</th>
+			 <th>Localization</th>
+			 <th>Neutrality</th>
+			 <th>Mitigation</th>
+    			 </tr>
+ 			 </thead>
+
+                        <tr>
+                        <td><input type='text' ng-model='table.fields.summary' placeholder='summary:'></td>
+                        <td><input type='text' ng-model='table.fields.praise' placeholder='praise:'></td>
+			<td><input type='text' ng-model='table.fields.problem' placeholder='problem:'></td>
+			<td><input type='text' ng-model='table.fields.solution' placeholder='solution:'></td>
+			<td><input type='text' ng-model='table.fields.localization' placeholder='localization:'></td>
+			<td><input type='text' ng-model='table.fields.neutrality' placeholder='neutrality:'></td>
+			<td><input type='text' ng-model='table.fields.mitigation' placeholder='mitigation:'></td></tr>
+		     </table>
+                     </div>
+                     <button type="submit" class="btn btn-primary btn-lg" ng-click="updateTodo()">Update</button>
 		</div>
 		
 		<!-- FORM TO CREATE TODOS -->
@@ -43,7 +67,7 @@
 					<div class="form-group">
 
 						<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-						<input type="textarea" class="form-control input-lg text-center" placeholder="input your comment" ng-model="formData.text">
+						<input type="text" class="form-control input-lg text-center" placeholder="input your comment" ng-model="formData.text" required='True'>
 					</div>
 
 					<!-- createToDo() WILL CREATE NEW TODOS -->
