@@ -9,7 +9,7 @@ import os
 
 class Prediction(object):
     def __init__(self):
-        self.reader = text_input.TextReader('./data/mr/', suffix_list=['summary'])
+        self.reader = text_input.TextReader('./data/mr/', suffix='Summary')
         self.reader.prepare_data(vocab_size=4000, test_fraction=0.1)
         train.train()
         self.sess = train.sess

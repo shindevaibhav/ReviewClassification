@@ -85,13 +85,14 @@ class TextReader(object):
         word_list.insert(0, UNK_TOKEN)
         self.word2freq = c
         self.word2id = dict()
-        vocab_file = os.path.join(self.data_dir, 'vocab')
-        with open(vocab_file, 'w') as outfile:
-            for idx, w in enumerate(word_list):
-                self.word2id[w] = idx
-                outfile.write(w + '\t' + str(idx) + '\n')
+        #vocab_file = os.path.join(self.data_dir, 'vocab')
+        #with open(vocab_file, 'w') as outfile:
+        #    for idx, w in enumerate(word_list):
+        #        self.word2id[w] = idx
+        #        outfile.write(w + '\t' + str(idx) + '\n')
         print '%d words found in training set. Truncate to vocabulary size %d.' % (total_words, vocab_size)
-        print 'Dictionary saved to file %s. Max sentence length in data is %d.' % (vocab_file, max_sent_len)
+        #print 'Dictionary saved to file %s. Max sentence length in data is %d.' % (vocab_file, max_sent_len)
+        print 'Max sentence length in data is %d.' % (max_sent_len)
         return max_sent_len
 
     def generate_id_data(self, max_sent_len=100):
