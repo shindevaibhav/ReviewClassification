@@ -20,28 +20,19 @@ RANDOM_SEED = 1234
 # TODO: I need to clean up this preprocessing script a bit
 class TextReader(object):
 
-    def __init__(self, data_dir, num_classes=2, suffix_list=None):
+    def __init__(self, data_dir, num_classes=2, suffix=None):
         self.data_dir = data_dir
         self.num_classes = num_classes
-        if suffix_list:
-            self.suffix_list = suffix_list
-        else:
-            self.suffix_list = [str(x) for x in range(num_classes)]
-        self.data_files = None
+        self.suffix = suffix
+        self.data_file = None
 
-    def get_filenames(self):
+    def get_filename(self):
         if not os.path.exists(self.data_dir):
             sys.exit('Data directory does not exist.')
         data_files = []
-        for f in os.listdir(self.data_dir):
-            f = os.path.join(self.data_dir, f)
-            if os.path.isfile(f):
-                chunks = f.split('_')
-                if len(chunks) >= 2 and chunks[1] in self.suffix_list:
-                    data_files.append(f)
-        assert data_files
-        self.data_files = data_files
-        return data_files
+        f = os.path.join(self.data_dir, "labeled_review_data.csv")
+        self.data_file = f
+        return f
 
     def clean_str(self, string):
         """
@@ -65,23 +56,28 @@ class TextReader(object):
     def prepare_dict(self, vocab_size=10000):
         max_sent_len = 0
         c = Counter()
-        data_files = self.get_filenames()    #gets the datafile names
+        data_file = self.get_filename()    #gets the datafile names
         # store the preprocessed raw text to avoid cleaning it again
         self.raw_text = []
-        for f in data_files:
-            strings = []
-            df = pd.read_csv(f)
-            print f
-	    for i in range(len(df)):
-                line = df.iloc[i]["Comments"]
-                clean_string = self.clean_str(line)
-                strings.append(clean_string)
-                toks = clean_string.split()
-                if len(toks) > max_sent_len:
-                    max_sent_len = len(toks)
-                for t in toks:
-                    c[t] += 1
-            self.raw_text.append(strings)
+        strings_pos = []
+        strings_neg = []
+        df = pd.read_csv(data_file)
+        print data_file
+        for i in range(len(df)):
+            line = df.iloc[i]["Comments"]
+            val = df.iloc[i][self.suffix]
+            clean_string = self.clean_str(line)
+            if val > 0:
+                strings_pos.append(clean_string)
+            else:
+                strings_neg.append(clean_string)
+            toks = clean_string.split()
+            if len(toks) > max_sent_len:
+                max_sent_len = len(toks)
+            for t in toks:
+                c[t] += 1
+        self.raw_text.append(strings_pos)
+        self.raw_text.append(strings_neg)
         total_words = len(c)
         assert total_words >= vocab_size
         word_list = [p[0] for p in c.most_common(vocab_size - 2)]
@@ -212,7 +208,7 @@ def prepare_pretrained_embedding(fname, word2id):
     return embedding
 
 def main():
-    reader = TextReader('./data/mr/', suffix_list=['summary'])
+    reader = TextReader('./data/mr/', suffix='Summary')
 #    reader = TextReader('./data/mr/', suffix_list=['neg', 'pos'])
     reader.prepare_data(vocab_size=4000, test_fraction=0.1)
 #    reader.prepare_data(vocab_size=15000, test_fraction=0.1)    
