@@ -120,8 +120,8 @@ class TextReader(object):
         test_num = int(self.num_examples * test_fraction)
         self.test_data = (sentences[:test_num], labels[:test_num])
         self.train_data = (sentences[test_num:], labels[test_num:])
-        dump_to_file(os.path.join(self.data_dir, 'train.cPickle'), self.train_data)
-        dump_to_file(os.path.join(self.data_dir, 'test.cPickle'), self.test_data)
+        dump_to_file(os.path.join(self.data_dir, self.suffix + '_train.cPickle'), self.train_data)
+        dump_to_file(os.path.join(self.data_dir, self.suffix + '_test.cPickle'), self.test_data)
         print 'Split dataset into training and test set: %d for training, %d for testing.' % \
             (self.num_examples - test_num, test_num)
         return

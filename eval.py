@@ -13,7 +13,7 @@ tf.app.flags.DEFINE_string('data_dir', './data/mr/', 'Directory of the data')
 tf.app.flags.DEFINE_string('train_dir', './train/', 'Where to read model')
 tf.app.flags.DEFINE_boolean('train_data', False, 'To evaluate on training data')
 
-def evaluate():
+def evaluate(suffix):
     """ Build evaluation graph and run. """
     with tf.Graph().as_default():
         with tf.variable_scope('cnn'):
@@ -22,9 +22,9 @@ def evaluate():
 
         # read test files
         if FLAGS.train_data:
-            loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, 'train.cPickle'), batch_size=FLAGS.batch_size)
+            loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, suffix + '_train.cPickle'), batch_size=FLAGS.batch_size)
         else:
-            loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, 'test.cPickle'), batch_size=FLAGS.batch_size)
+            loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, suffix + '_test.cPickle'), batch_size=FLAGS.batch_size)
         print 'Start evaluation, %d batches needed, with %d examples per batch.' % (loader.num_batch, FLAGS.batch_size)
 
         true_count = 0
@@ -49,7 +49,7 @@ def evaluate():
             print '%s: test_loss = %.6f, test_accuracy = %.3f' % (datetime.now(), avg_loss, accuracy)
 
 def main(argv=None):
-    evaluate()
+    evaluate('Summary')
 
 if __name__ == '__main__':
     tf.app.run()

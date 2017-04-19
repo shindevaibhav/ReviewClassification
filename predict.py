@@ -8,13 +8,13 @@ import os
 
 
 class Prediction(object):
-    def __init__(self):
-        self.reader = text_input.TextReader('./data/mr/', suffix='Summary')
+    def __init__(self, suffix='Summary'):
+        self.reader = text_input.TextReader('./data/mr/', suffix=suffix)
         self.reader.prepare_data(vocab_size=4000, test_fraction=0.1)
-        train.train()
+        train.train(suffix)
         self.sess = train.sess
         self.model = train.m
-        self.data_loader = text_input.DataLoader(os.path.join(train.FLAGS.data_dir, 'train.cPickle'),
+        self.data_loader = text_input.DataLoader(os.path.join(train.FLAGS.data_dir, suffix + '_train.cPickle'),
                                             batch_size=train.FLAGS.batch_size)
     #string = "I think that you have some good ideas. I really liked the first idea that you came up with it sounds as if you have put some thought into it. As for your second idea, would it be possible to empower these communities with a simplified version of your plan. When I think of the struggles that these communities have to deal with, my first notion is not that they are in need of jobs."
     def get_prediction(self,string):
@@ -43,7 +43,7 @@ class Prediction(object):
             return "negative"
 
 def main():
-    pred = Prediction()
+    pred = Prediction(suffix='Summary')
     df_summary_pos = pd.read_csv("csv/_summary_pos.csv")
     string = df_summary_pos.iloc[35]["Comments"]
     print string
