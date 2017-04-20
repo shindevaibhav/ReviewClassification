@@ -63,6 +63,7 @@ class TextReader(object):
         strings_neg = []
         df = pd.read_csv(data_file)
         print data_file
+        print self.suffix
         for i in range(len(df)):
             line = df.iloc[i]["Comments"]
             val = df.iloc[i][self.suffix]
@@ -87,8 +88,8 @@ class TextReader(object):
         self.word2id = dict()
         #vocab_file = os.path.join(self.data_dir, 'vocab')
         #with open(vocab_file, 'w') as outfile:
-        #    for idx, w in enumerate(word_list):
-        #        self.word2id[w] = idx
+        for idx, w in enumerate(word_list):
+            self.word2id[w] = idx
         #        outfile.write(w + '\t' + str(idx) + '\n')
         print '%d words found in training set. Truncate to vocabulary size %d.' % (total_words, vocab_size)
         #print 'Dictionary saved to file %s. Max sentence length in data is %d.' % (vocab_file, max_sent_len)
@@ -213,10 +214,10 @@ def main():
 #    reader = TextReader('./data/mr/', suffix_list=['neg', 'pos'])
     reader.prepare_data(vocab_size=4000, test_fraction=0.1)
 #    reader.prepare_data(vocab_size=15000, test_fraction=0.1)    
-    if not os.path.isfile('./data/mr/emb.npy'):
-        embedding = prepare_pretrained_embedding('./data/word2vec/GoogleNews-vectors-negative300.bin', reader.word2id)
-        # dump_to_file('./data/mr/emb.cPickle', embedding)
-        np.save('./data/mr/emb.npy', embedding)
+    #if not os.path.isfile('./data/mr/emb.npy'):
+    embedding = prepare_pretrained_embedding('./data/word2vec/GoogleNews-vectors-negative300.bin', reader.word2id)
+    # dump_to_file('./data/mr/emb.cPickle', embedding)
+    np.save('./data/mr/emb.npy', embedding)
 
 
 if __name__ == '__main__':
