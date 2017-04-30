@@ -17,7 +17,6 @@ RANDOM_SEED = 1234
 #Reading pretrained word vectors from file ...
 #Generated embeddings with shape (15000, 300)
 
-# TODO: I need to clean up this preprocessing script a bit
 class TextReader(object):
 
     def __init__(self, data_dir, num_classes=2, suffix=None):

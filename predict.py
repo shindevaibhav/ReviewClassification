@@ -5,8 +5,6 @@ import train
 import numpy as np
 import os
 
-
-
 class Prediction(object):
     def __init__(self, suffix='Summary'):
         self.reader = text_input.TextReader('./data/mr/', suffix=suffix)
