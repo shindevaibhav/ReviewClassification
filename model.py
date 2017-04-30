@@ -43,8 +43,8 @@ class Model(object):
 
     def build_graph(self):
         """ Build the computation graph. """
-        self._inputs = tf.placeholder(dtype=tf.int64, shape=[self.batch_size, self.sent_len], name='input_x')
-        self._labels = tf.placeholder(dtype=tf.int64, shape=[self.batch_size], name='input_y')
+        self._inputs = tf.placeholder(dtype=tf.int64, shape=[None, self.sent_len], name='input_x')
+        self._labels = tf.placeholder(dtype=tf.int64, shape=[None], name='input_y')
         losses = []
 
         # lookup layer
