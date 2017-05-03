@@ -18,7 +18,7 @@ tf.app.flags.DEFINE_boolean('log_device_placement', False, 'Whether log device i
 
 tf.app.flags.DEFINE_string('optimizer', 'adagrad', 'Optimizer to use. Must be one of "sgd", adagrad", "adadelta" and "adam"')
 tf.app.flags.DEFINE_float('init_lr', 0.01, 'Initial learning rate')
-tf.app.flags.DEFINE_float('lr_decay', 0.95, 'LR decay rate')
+tf.app.flags.DEFINE_float('lr_decay', 0.95, 'LR decay rate--reduce the learning rate if needed')
 tf.app.flags.DEFINE_integer('tolerance_step', 500, 'Decay the lr after loss remains unchanged for this number of steps')
 tf.app.flags.DEFINE_float('dropout', 0.5, 'Dropout rate. 0 is no dropout.')
 
@@ -42,12 +42,12 @@ def train(suffix):
             m = model.Model(FLAGS, is_train=True)
         with tf.variable_scope('cnn', reuse=True):
             global mtest
-	    mtest = model.Model(FLAGS, is_train=False)
+            mtest = model.Model(FLAGS, is_train=False)
 
         saver = tf.train.Saver(tf.global_variables())
         save_path = os.path.join(FLAGS.train_dir, 'model.ckpt')
         summary_op = tf.summary.merge_all()
-	global sess
+        global sess
         sess = tf.Session(config=tf.ConfigProto(log_device_placement=FLAGS.log_device_placement))
         summary_writer = tf.summary.FileWriter(FLAGS.train_dir, graph_def=sess.graph_def)
         sess.run(tf.global_variables_initializer())

@@ -5,8 +5,6 @@ import train
 import numpy as np
 import os
 
-
-
 class Prediction(object):
     def __init__(self, suffix='Summary'):
         self.reader = text_input.TextReader('./data/mr/', suffix=suffix)
@@ -16,7 +14,6 @@ class Prediction(object):
         self.model = train.m
         self.data_loader = text_input.DataLoader(os.path.join(train.FLAGS.data_dir, suffix + '_train.cPickle'),
                                             batch_size=train.FLAGS.batch_size)
-    #string = "I think that you have some good ideas. I really liked the first idea that you came up with it sounds as if you have put some thought into it. As for your second idea, would it be possible to empower these communities with a simplified version of your plan. When I think of the struggles that these communities have to deal with, my first notion is not that they are in need of jobs."
     def get_prediction(self,string):
         #string = "Overall I felt that the student made a good effort to explain their ideas.  1. An unspecified rough app or computer program.  2. A series of sensors in bikes and/ or cars that alert drivers/ cyclists to potential collisions.  3. An app that the city/ police can use to see where cyclist have had accidents or poor experiences so that changes can be made to prevent future accidents."
         clean_string = self.reader.clean_str(string)
@@ -33,11 +30,12 @@ class Prediction(object):
         toks_ids = [1 for i in range(pad_left)] + [self.reader.word2id[t] if t in self.reader.word2id else 0 for t in toks] + [1 for i in range(pad_right)]
         x = []
         x.append(toks_ids)
-
-        x_batch = list(self.data_loader._x[50:99]) + x
-        x_batch = np.array(x_batch)
-        logits = self.sess.run([self.model.logits], feed_dict={self.model.inputs: x_batch})
-        if logits[0][49][0] > logits[0][49][1]:
+        #x_batch = list(self.data_loader._x[50:99]) + x
+        #x_batch = np.array(x_batch)
+        x = np.array(x)
+        logits = self.sess.run([self.model.logits], feed_dict={self.model.inputs: x})
+        print logits
+        if logits[0][0][0] > logits[0][0][1]:
             return "positive"
         else:
             return "negative"

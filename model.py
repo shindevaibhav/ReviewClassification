@@ -43,8 +43,8 @@ class Model(object):
 
     def build_graph(self):
         """ Build the computation graph. """
-        self._inputs = tf.placeholder(dtype=tf.int64, shape=[self.batch_size, self.sent_len], name='input_x')
-        self._labels = tf.placeholder(dtype=tf.int64, shape=[self.batch_size], name='input_y')
+        self._inputs = tf.placeholder(dtype=tf.int64, shape=[None, self.sent_len], name='input_x')
+        self._labels = tf.placeholder(dtype=tf.int64, shape=[None], name='input_y')
         losses = []
 
         # lookup layer
@@ -72,7 +72,7 @@ class Model(object):
                 # shape of pool: [batch_size, 1, 1, num_kernel]
                 pool = tf.squeeze(pool,axis=[1,2]) # size: [batch_size, num_kernel]
                 pool_tensors.append(pool)
-            pool_layer = tf.concat(1,pool_tensors, name='pool')
+            pool_layer = tf.concat(axis=1,values=pool_tensors, name='pool')
 
         # drop out layer
         if self.is_train and self.dropout > 0:
