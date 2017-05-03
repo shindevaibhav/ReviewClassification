@@ -15,7 +15,7 @@ function mainController($scope, $http) {
         $scope.createTodo = function() {
                 $http.post('/api/getPrediction', $scope.formData)
                         .success(function(data) {
-                                $scope.formData = {}; // clear the form so our user is ready to enter another
+                                // clear the form so our user is ready to enter another
                                 $scope.todos = data;
                                 $scope.table = { fields: data.result };
    				console.log($scope.table);
@@ -28,6 +28,16 @@ function mainController($scope, $http) {
         // Update the data
          $scope.updateTodo = function() {
                console.log($scope.table);
+               console.log("rutvij...........");
+               $scope.table.comment = $scope.formData;
+               console.log($scope.table);
+               $http.post('/api/postPrediction',$scope.table)
+			.success(function(data) {
+                              console.log("Success");
+                         })
+                        .error(function(data) {
+                                console.log('Error: ' + data);
+                         });
         };
       
 }
