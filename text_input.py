@@ -28,6 +28,7 @@ class TextReader(object):
     def get_filename(self):
         if not os.path.exists(self.data_dir):
             sys.exit('Data directory does not exist.')
+        #todo add new data to this file and remove the temp file
         data_files = []
         f = os.path.join(self.data_dir, "labeled_review_data.csv")
         self.data_file = f

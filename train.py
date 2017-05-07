@@ -11,7 +11,7 @@ import text_input
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('data_dir', './data/mr/', 'Directory of the data')
-tf.app.flags.DEFINE_string('train_dir', './train/', 'Directory to save training checkpoint files')
+tf.app.flags.DEFINE_string('train_dir', './train', 'Directory to save training checkpoint files')
 tf.app.flags.DEFINE_integer('num_epoch', 5, 'Number of epochs to run')#######change to 50
 tf.app.flags.DEFINE_boolean('use_pretrain', True, 'Use word2vec pretrained embeddings or not')
 tf.app.flags.DEFINE_boolean('log_device_placement', False, 'Whether log device information in summary')
@@ -31,6 +31,11 @@ mtest = None
 sess = None
 
 def train(suffix):
+    #make directory to save the summary and model
+    if tf.gfile.Exists(FLAGS.train_dir+"_"+suffix):
+        tf.gfile.DeleteRecursively(FLAGS.train_dir+"_"+suffix)
+    tf.gfile.MakeDirs(FLAGS.train_dir+"_"+suffix)
+
     # load data
     train_loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, suffix + '_train.cPickle'), batch_size=FLAGS.batch_size)
     test_loader = text_input.DataLoader(os.path.join(FLAGS.data_dir, suffix + '_test.cPickle'), batch_size=FLAGS.batch_size)
@@ -45,11 +50,11 @@ def train(suffix):
             mtest = model.Model(FLAGS, is_train=False)
 
         saver = tf.train.Saver(tf.global_variables())
-        save_path = os.path.join(FLAGS.train_dir, 'model.ckpt')
+        save_path = os.path.join(FLAGS.train_dir+"_"+suffix, 'model.ckpt')
         summary_op = tf.summary.merge_all()
         global sess
         sess = tf.Session(config=tf.ConfigProto(log_device_placement=FLAGS.log_device_placement))
-        summary_writer = tf.summary.FileWriter(FLAGS.train_dir, graph_def=sess.graph_def)
+        summary_writer = tf.summary.FileWriter(FLAGS.train_dir+"_"+suffix, graph_def=sess.graph_def)
         sess.run(tf.global_variables_initializer())
 
         if FLAGS.use_pretrain:
@@ -137,15 +142,13 @@ def train(suffix):
             # save after fixed epoch
             if epoch % FLAGS.save_epoch == 0:
                     saver.save(sess, save_path, global_step=epoch)
+        print epoch
         saver.save(sess, save_path, global_step=epoch)
 
 def _summary_for_scalar(name, value):
     return tf.Summary(value=[tf.Summary.Value(tag=name, simple_value=value)])
 
 def main(argv=None):
-    if tf.gfile.Exists(FLAGS.train_dir):
-        tf.gfile.DeleteRecursively(FLAGS.train_dir)
-    tf.gfile.MakeDirs(FLAGS.train_dir)
     train('Summary')
 
 if __name__ == '__main__':
