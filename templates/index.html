@@ -48,13 +48,13 @@
  			 </thead>
 
                         <tr>
-                        <td><input type='text' ng-model='table.fields.summary' placeholder='summary:'></td>
-                        <td><input type='text' ng-model='table.fields.praise' placeholder='praise:'></td>
-			<td><input type='text' ng-model='table.fields.problem' placeholder='problem:'></td>
-			<td><input type='text' ng-model='table.fields.solution' placeholder='solution:'></td>
-			<td><input type='text' ng-model='table.fields.localization' placeholder='localization:'></td>
-			<td><input type='text' ng-model='table.fields.neutrality' placeholder='neutrality:'></td>
-			<td><input type='text' ng-model='table.fields.mitigation' placeholder='mitigation:'></td></tr>
+                        <td><input type='text' ng-model='table.fields[0]' placeholder='summary:'></td>
+                        <td><input type='text' ng-model='table.fields[1]' placeholder='praise:'></td>
+			<td><input type='text' ng-model='table.fields[2]' placeholder='problem:'></td>
+			<td><input type='text' ng-model='table.fields[3]' placeholder='solution:'></td>
+			<td><input type='text' ng-model='table.fields[4]' placeholder='localization:'></td>
+			<td><input type='text' ng-model='table.fields[5]' placeholder='neutrality:'></td>
+			<td><input type='text' ng-model='table.fields[6]' placeholder='mitigation:'></td></tr>
 		     </table>
                      </div>
                      <button type="submit" class="btn btn-primary btn-lg" ng-click="updateTodo()">Update</button>
@@ -67,7 +67,7 @@
 					<div class="form-group">
 
 						<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-						<input type="text" class="form-control input-lg text-center" placeholder="input your comment" ng-model="formData.text" required='True'>
+						<input type="text" class="form-control input-lg text-center" placeholder="input your comment" ng-model="formData.text" required="True">
 					</div>
 
 					<!-- createToDo() WILL CREATE NEW TODOS -->
