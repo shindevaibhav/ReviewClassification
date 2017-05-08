@@ -1,6 +1,5 @@
 A Tensorflow implementation of convolutional neural network to classify sentences
 =========
-This implementation uses Tensorflow's `tf.conv2d` to perform 1D convolution on word sequences. It also supports using Google News word2vec pre-trained vectors to initialize word embeddings, which boosts the performance on movie review dataset from ~76% to ~81%.
 
 The original theano implementation of this model by the author is [here](https://github.com/yoonkim/CNN_sentence). Another tensorflow implementation that does not support loading pretrained vectors is [here](https://github.com/dennybritz/cnn-text-classification-tf).
 
