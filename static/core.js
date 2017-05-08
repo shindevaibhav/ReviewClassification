@@ -58,6 +58,7 @@ function mainController($scope, $http) {
 			.success(function(data) {
                               console.log("Success");
                               $scope.table.fields = null
+                              $scope.formData.text = "success"
                          })
                         .error(function(data) {
                                 console.log('Error: ' + data);
