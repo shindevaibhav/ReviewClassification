@@ -6,6 +6,7 @@ from collections import Counter
 import cPickle as pickle
 import numpy as np
 import pandas as pd
+import db_methods
 
 UNK_TOKEN = '<unk>'
 PAD_TOKEN = '<pad>'
@@ -28,7 +29,6 @@ class TextReader(object):
     def get_filename(self):
         if not os.path.exists(self.data_dir):
             sys.exit('Data directory does not exist.')
-        #todo add new data to this file and remove the temp file
         data_files = []
         f = os.path.join(self.data_dir, "labeled_review_data.csv")
         self.data_file = f
@@ -211,7 +211,18 @@ def prepare_pretrained_embedding(fname, word2id):
     print 'Generated embeddings with shape ' + str(embedding.shape)
     return embedding
 
+def add_new_reviews():
+    f = os.path.join('./data/mr/', 'labeled_review_data.csv')
+    df_new = db_methods.find_new_reviews_db()
+    df_old = pd.read_csv(f)
+    data = df_new[df_old.columns.values]
+    result = pd.concat([df_old,data], ignore_index=True)
+    result.to_csv(f)
+    db_methods.update_review_db(list(df_new['_id']))
+
+
 def main():
+    add_new_reviews()
     reader = TextReader('./data/mr/', suffix='Summary')
 #    reader = TextReader('./data/mr/', suffix_list=['neg', 'pos'])
     reader.prepare_data(vocab_size=4000, test_fraction=0.1)
