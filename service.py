@@ -69,7 +69,7 @@ def main():
     parser.add_argument("--train", help="increase output verbosity")
     args = parser.parse_args()
     hard_train = False
-    if args.train:
+    if args.train == True:
         print "model will be trained"
         hard_train = True
     #app.run(host='0.0.0.0', debug=True, use_reloader=False, port=5001)
