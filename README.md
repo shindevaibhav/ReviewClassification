@@ -12,33 +12,21 @@ The original theano implementation of this model by the author is [here](https:/
 
 ## Data
 
-The data in `data/mr/` are movie review polarity data provided [here](http://www.cs.cornell.edu/people/pabo/movie-review-data/). The current `data/word2vec` directory is empty. To use the pretrained word2vec embeddings, download the Google News pretrained vector data from
+The data in `data/mr/` contains 905 labeled expertiza reviews. The current `data/word2vec` directory is empty. To use the pretrained word2vec embeddings, download the Google News pretrained vector data from
 "wget https://s3.amazonaws.com/mordecai-geo/GoogleNews-vectors-negative300.bin.gz"
 and unzip it to the directory. It will be a `.bin` file.
 
 ## Usage
-curl -H "Content-Type: application/json" -X POST -d '{"text": "hello everyone it is important"}' http://0.0.0.0:5001/api/getPrediction
 
 #### Preprocess the data
 
     python text_input.py
 
-#### Train
+#### Start the service
+    python service.py
 
-    python train.py
-
-By default the pretrained vectors will be loaded and used to initialize the embeddings. To suppress this, use
-
-    python train.py --use_pretrain False
-
-#### Evaluate
-
-    python eval.py
-
-By default evaluation is run over test set. To evaluate over training set, run
-
-    python eval.py --train_data
-
+    
+    
 ## References
 
 1. Kim, Yoon. "Convolutional neural networks for sentence classification." arXiv preprint arXiv:1408.5882 (2014). [link](http://arxiv.org/abs/1408.5882)
