@@ -23,7 +23,7 @@ and unzip it to the directory. It will be a `.bin` file.
 
 #### Start the service
     python service.py
-
+    ==> http://0.0.0.0:5002/
     
     
 ## References
