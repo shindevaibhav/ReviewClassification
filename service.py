@@ -50,13 +50,14 @@ def get_prediction():
     return jsonify({'result' : {'0' : result_summary,'1' : result_praise,'2' : result_problem,'3' : result_solution,'4' : result_localization,'5' : result_neutrality,'6' : result_mitigation}})
 '''
 
-
+#['Comments', 'Praise', 'Problem', 'Solution', 'Mitigation','Neutrality', 'Localization', 'Summary']
 @app.route('/api/postPrediction',methods=['POST'])
 def add_prediction():
     task = request.get_json(silent=True)
+    print task
     pred = mongo.db.predict
-    pred_id = pred.insert({'comment':task['comment'],'summary': task['fields']['0'],'praise': task['fields']['1'],'problem':task['fields']['2'],'solution':task['fields']['3'],'localization':task['fields']['4'],'neutrality':task['fields']['5'],'mitigation':task['fields']['6'],'trained':'false'})
-    print "rutvij...",task['fields']
+    pred_id = pred.insert({'Comments':task['comment'],'Summary': task['fields']['0'],'Praise': task['fields']['1'],'Problem':task['fields']['2'],'Solution':task['fields']['3'],'Localization':task['fields']['4'],'Neutrality':task['fields']['5'],'Mitigation':task['fields']['6'],'trained':'false'})
+    print "new row...",task['fields']
     new_pred = pred.find_one({'_id': pred_id })
     output = {'_id':str(pred_id),'task' : task['fields']}
     return jsonify({'result' : output})
