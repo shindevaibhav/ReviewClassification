@@ -13,7 +13,7 @@ train_dir = './train'
 class Prediction(object):
     def __init__(self, suffix='Summary'):
         self.reader = text_input.TextReader('./data/mr/', suffix=suffix)
-        self.reader.prepare_data(vocab_size=4000, test_fraction=0.1)
+        self.reader.prepare_data(vocab_size=4000, test_fraction=0.1, train_prep=False)
         if(os.path.exists(train_dir+"_"+suffix)):
             with tf.Graph().as_default():
                 with tf.variable_scope('cnn'):

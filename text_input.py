@@ -127,10 +127,12 @@ class TextReader(object):
             (self.num_examples - test_num, test_num)
         return
 
-    def prepare_data(self, vocab_size=10000, test_fraction=0.1):
+    def prepare_data(self, vocab_size=10000, test_fraction=0.1, train_prep = True):
         max_sent_lent = self.prepare_dict(vocab_size)
-        sentence_and_label_pairs = self.generate_id_data(max_sent_lent)
-        self.shuffle_and_split(sentence_and_label_pairs, test_fraction)
+        self.max_sent_len = max_sent_lent
+        if(train_prep):
+            sentence_and_label_pairs = self.generate_id_data(max_sent_lent)
+            self.shuffle_and_split(sentence_and_label_pairs, test_fraction)
         return
 
 class DataLoader(object):

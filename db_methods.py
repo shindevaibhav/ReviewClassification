@@ -4,13 +4,12 @@ client = MongoClient()
 db = client.predict
 pred = db.predict
 
-def findFalse():
+def find_new_reviews_db():
   data = pred.find({'trained':u'false'})
-  data1 = pred.find()
   for record in data:
-   print record
+    print record
 
-def updateFalse(pred_id):
+def update_review_db(pred_id):
   #pred.find_one({'_id': ObjectId(pred_id)}).update({'trained':u'true'})  
   pred.update_one({
   '_id': ObjectId(pred_id)
@@ -22,5 +21,5 @@ def updateFalse(pred_id):
 
 
 #findFalse()
-updateFalse("590f94d0dcb2c44938863908")
-findFalse()
+#updateFalse("590f94d0dcb2c44938863908")
+#findFalse()
