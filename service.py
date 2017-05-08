@@ -55,7 +55,7 @@ def add_prediction():
     task = request.get_json(silent=True)
     print task['comment']['text']
     pred = mongo.db.predict
-    pred_id = pred.insert({'Comments':task['comment']['text'],'Summary': task['fields']['0'],'Praise': task['fields']['1'],'Problem':task['fields']['2'],'Solution':task['fields']['3'],'Localization':task['fields']['4'],'Neutrality':task['fields']['5'],'Mitigation':task['fields']['6'],'trained':'false'})
+    pred_id = pred.insert({'Comments':task['comment']['text'],'Summary': int(task['fields']['0']),'Praise': int(task['fields']['1']),'Problem':int(task['fields']['2']),'Solution':int(task['fields']['3']),'Localization':int(task['fields']['4']),'Neutrality':int(task['fields']['5']),'Mitigation':int(task['fields']['6']),'trained':'false'})
     print "new row...",task['fields']
     new_pred = pred.find_one({'_id': pred_id })
     output = {'_id':str(pred_id),'task' : task['fields']}

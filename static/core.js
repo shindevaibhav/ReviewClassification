@@ -22,7 +22,7 @@ function mainController($scope, $http) {
                                 console.log("In here");
                                 for(var i=0;i<7;i++){
                				console.log($scope.table.fields[i]);
-               				if($scope.table.fields[i]=='Positive'){
+               				if($scope.table.fields[i]=='positive'){
                  				 $scope.table.fields[i]='1';
               				}else{
                  				 $scope.table.fields[i]='0';
