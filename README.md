@@ -22,7 +22,7 @@ and unzip it to the directory. It will be a `.bin` file.
     python text_input.py
 
 #### Start the service
-    python service.py
+    python service.py --train True  #train = true(will not reuse the earlier saved model)
     ==> http://0.0.0.0:5002/
     
     
