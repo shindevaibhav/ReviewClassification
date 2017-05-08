@@ -3,7 +3,7 @@ from flask import jsonify
 from flask import request,render_template
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-#import predict
+import predict
 
 app = Flask(__name__)
 #global pred_object
@@ -24,9 +24,8 @@ def get_prediction():
     print "Inside Post"
     task = request.json['text']
     print task
-    return jsonify({'result': {'0': 'Positive', '1': 'Negative', '2': 'Positive', '3': 'Negative', '4': 'Positive',
-                               '5': 'Negative', '6': 'Positive'}})
-'''    
+    #return jsonify({'result': {'0': 'Positive', '1': 'Negative', '2': 'Positive', '3': 'Negative', '4': 'Positive',
+    #                           '5': 'Negative', '6': 'Positive'}})    
     result_summary =  pred_summary.get_prediction(task)
     print result_summary
 
@@ -39,7 +38,7 @@ def get_prediction():
     result_solution = pred_solution.get_prediction(task)
     print result_solution
 
-   result_localization = pred_localization.get_prediction(task)
+    result_localization = pred_localization.get_prediction(task)
     print result_localization
 
     result_neutrality = pred_neutrality.get_prediction(task)
@@ -48,15 +47,15 @@ def get_prediction():
     result_mitigation = pred_mitigation.get_prediction(task)
     print result_mitigation
     return jsonify({'result' : {'0' : result_summary,'1' : result_praise,'2' : result_problem,'3' : result_solution,'4' : result_localization,'5' : result_neutrality,'6' : result_mitigation}})
-'''
+
 
 #['Comments', 'Praise', 'Problem', 'Solution', 'Mitigation','Neutrality', 'Localization', 'Summary']
 @app.route('/api/postPrediction',methods=['POST'])
 def add_prediction():
     task = request.get_json(silent=True)
-    print task
+    print task['comment']['text']
     pred = mongo.db.predict
-    pred_id = pred.insert({'Comments':task['comment'],'Summary': task['fields']['0'],'Praise': task['fields']['1'],'Problem':task['fields']['2'],'Solution':task['fields']['3'],'Localization':task['fields']['4'],'Neutrality':task['fields']['5'],'Mitigation':task['fields']['6'],'trained':'false'})
+    pred_id = pred.insert({'Comments':task['comment']['text'],'Summary': task['fields']['0'],'Praise': task['fields']['1'],'Problem':task['fields']['2'],'Solution':task['fields']['3'],'Localization':task['fields']['4'],'Neutrality':task['fields']['5'],'Mitigation':task['fields']['6'],'trained':'false'})
     print "new row...",task['fields']
     new_pred = pred.find_one({'_id': pred_id })
     output = {'_id':str(pred_id),'task' : task['fields']}
@@ -64,8 +63,7 @@ def add_prediction():
     
 def main():
     print "Inside service main"
-    app.run(host='0.0.0.0', debug=True, use_reloader=False, port=5001)
-'''
+    #app.run(host='0.0.0.0', debug=True, use_reloader=False, port=5001)
     global pred_summary
     pred_summary = predict.Prediction(suffix='Summary')
     global pred_praise
@@ -80,8 +78,7 @@ def main():
     pred_neutrality = predict.Prediction(suffix='Neutrality')
     global pred_localization
     pred_localization = predict.Prediction(suffix='Localization')
-'''
-    #app.run(host='0.0.0.0', debug=True,use_reloader=False, port=5002)
+    app.run(host='0.0.0.0', debug=True,use_reloader=False, port=5002)
 
 
 if __name__ == '__main__':
