@@ -2,6 +2,7 @@ from flask import Flask
 from flask import jsonify
 from flask import request,render_template
 from flask_pymongo import PyMongo
+import argparse
 from bson.objectid import ObjectId
 import predict
 
@@ -63,21 +64,29 @@ def add_prediction():
     
 def main():
     print "Inside service main"
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--train", help="increase output verbosity")
+    args = parser.parse_args()
+    hard_train = False
+    if args.train:
+        print "model will be trained"
+        hard_train = True
     #app.run(host='0.0.0.0', debug=True, use_reloader=False, port=5001)
     global pred_summary
-    pred_summary = predict.Prediction(suffix='Summary')
+    pred_summary = predict.Prediction(suffix='Summary',hard_train=hard_train  )
     global pred_praise
-    pred_praise = predict.Prediction(suffix='Praise')
+    pred_praise = predict.Prediction(suffix='Praise',hard_train=hard_train)
     global pred_problem
-    pred_problem = predict.Prediction(suffix='Problem')
+    pred_problem = predict.Prediction(suffix='Problem',hard_train=hard_train)
     global pred_solution
-    pred_solution = predict.Prediction(suffix='Solution')
+    pred_solution = predict.Prediction(suffix='Solution',hard_train=hard_train)
     global pred_mitigation
-    pred_mitigation = predict.Prediction(suffix='Mitigation')
+    pred_mitigation = predict.Prediction(suffix='Mitigation',hard_train=hard_train)
     global pred_neutrality
-    pred_neutrality = predict.Prediction(suffix='Neutrality')
+    pred_neutrality = predict.Prediction(suffix='Neutrality',hard_train=hard_train)
     global pred_localization
-    pred_localization = predict.Prediction(suffix='Localization')
+    pred_localization = predict.Prediction(suffix='Localization',hard_train=hard_train)
     app.run(host='0.0.0.0', debug=True,use_reloader=False, port=5002)
 
 
