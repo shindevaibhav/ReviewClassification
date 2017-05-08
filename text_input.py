@@ -214,12 +214,14 @@ def prepare_pretrained_embedding(fname, word2id):
 def add_new_reviews():
     f = os.path.join('./data/mr/', 'labeled_review_data.csv')
     df_new = db_methods.find_new_reviews_db()
+    if len(df_new) == 0:
+        return
     df_old = pd.read_csv(f)
     data = df_new[df_old.columns.values]
     result = pd.concat([df_old,data], ignore_index=True)
     result.to_csv(f)
     db_methods.update_review_db(list(df_new['_id']))
-
+    return
 
 def main():
     add_new_reviews()
