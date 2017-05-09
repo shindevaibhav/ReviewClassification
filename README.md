@@ -20,6 +20,9 @@ and unzip it to the directory. It will be a `.bin` file.
 #### Preprocess the data
 
     python text_input.py
+        This will decide the configuration values for 
+            ('vocab_size', 4000, 'Vocabulary size')(model.py)
+            ('sent_len', 480, 'max sentence length')(model.py)
 
 #### Start the service
     python service.py --train True  #train = true(will not reuse the earlier saved model)
