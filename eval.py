@@ -10,7 +10,8 @@ import text_input
 FLAGS = tf.app.flags.FLAGS
 
 tf.app.flags.DEFINE_string('data_dir', './data/mr/', 'Directory of the data')
-tf.app.flags.DEFINE_string('train_dir', './train/', 'Where to read model')
+tf.app.flags.DEFINE_string('train_dir', './train', 'Where to read model')
+tf.app.flags.DEFINE_string('suffix', 'Summary', 'Suffix')
 tf.app.flags.DEFINE_boolean('train_data', False, 'To evaluate on training data')
 
 def evaluate(suffix):
@@ -31,7 +32,7 @@ def evaluate(suffix):
         avg_loss = 0
 
         with tf.Session() as sess:
-            ckpt = tf.train.get_checkpoint_state(FLAGS.train_dir)
+            ckpt = tf.train.get_checkpoint_state(FLAGS.train_dir+"_"+suffix)
             if ckpt and ckpt.model_checkpoint_path:
                 saver.restore(sess, ckpt.model_checkpoint_path)
             else:
@@ -49,7 +50,8 @@ def evaluate(suffix):
             print '%s: test_loss = %.6f, test_accuracy = %.3f' % (datetime.now(), avg_loss, accuracy)
 
 def main(argv=None):
-    evaluate('Summary')
+    print FLAGS.suffix
+    evaluate(FLAGS.suffix)
 
 if __name__ == '__main__':
     tf.app.run()
